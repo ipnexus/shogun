@@ -173,7 +173,7 @@ EFeatureClass CRandomKitchenSinksDotFeatures::get_feature_class() const
 
 int32_t CRandomKitchenSinksDotFeatures::get_num_vectors() const
 {
-	return feats->get_num_vectors();
+	return m_subset_stack->has_subsets() ? m_subset_stack->get_size() : feats->get_num_vectors();
 }
 
 const char* CRandomKitchenSinksDotFeatures::get_name() const
