@@ -210,6 +210,8 @@ namespace shogun
 
 			return true;
 		}
+		void set_weight_labels(const SGVector<float64_t> weight_labels);
+		SGVector<float64_t> get_weight_labels();
 
 	protected:
 		/** train linear SVM classifier
@@ -248,6 +250,9 @@ namespace shogun
 		float64_t C1;
 		/** C2 */
 		float64_t C2;
+		/** weight labels */
+		SGVector<float64_t> m_weight_labels;
+
 		/** if bias shall be used */
 		bool use_bias;
 		/** epsilon */

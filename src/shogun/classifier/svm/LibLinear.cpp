@@ -140,14 +140,20 @@ bool CLibLinear::train_machine(CFeatures* data)
 	prob.use_bias = get_bias_enabled();
 	double Cp = get_C1();
 	double Cn = get_C2();
+        if (!m_weight_labels.vlen || !m_weight_labels.vector) {
+          //printf("no weights\n");
+        } else {
+          Cp *= m_weight_labels[0];
+          Cn *= m_weight_labels[1];
+        }
 
 	for (int32_t i = 0; i < prob.l; i++)
 	{
 		prob.y[i] = ((CBinaryLabels*)m_labels)->get_int_label(i);
 		if (prob.y[i] == +1)
-			Cs[i] = get_C1();
+			Cs[i] = Cp;
 		else if (prob.y[i] == -1)
-			Cs[i] = get_C2();
+			Cs[i] = Cn;
 		else
 			SG_ERROR("labels should be +1/-1 only\n")
 	}
@@ -1414,4 +1420,17 @@ void CLibLinear::init_linear_term()
 	m_linear_term = SGVector<float64_t>(m_labels->get_num_labels());
 	SGVector<float64_t>::fill_vector(
 	    m_linear_term.vector, m_linear_term.vlen, -1.0);
+}
+
+void CLibLinear::set_weight_labels(const SGVector<float64_t> weight_labels)
+{
+        m_weight_labels = weight_labels;
+}
+
+SGVector<float64_t> CLibLinear::get_weight_labels()
+{
+        if (!m_weight_labels.vlen || !m_weight_labels.vector)
+                SG_ERROR("Please assign weight labels first!\n")
+
+        return m_weight_labels;
 }

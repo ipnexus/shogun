@@ -41,6 +41,7 @@ void CMulticlassLibLinear::init_defaults()
 void CMulticlassLibLinear::register_parameters()
 {
 	SG_ADD(&m_C, "m_C", "regularization constant",MS_AVAILABLE);
+	SG_ADD(&m_weight_labels, "m_weight_labels", "regularization constant weight",MS_NOT_AVAILABLE);
 	SG_ADD(&m_epsilon, "m_epsilon", "tolerance epsilon",MS_NOT_AVAILABLE);
 	SG_ADD(&m_max_iter, "m_max_iter", "max number of iterations",MS_NOT_AVAILABLE);
 	SG_ADD(&m_use_bias, "m_use_bias", "indicates whether bias should be used",MS_NOT_AVAILABLE);
@@ -115,8 +116,19 @@ bool CMulticlassLibLinear::train_machine(CFeatures* data)
 		m_train_state = new mcsvm_state();
 
 	float64_t* C = SG_MALLOC(float64_t, num_vectors);
-	for (int32_t i=0; i<num_vectors; i++)
-		C[i] = m_C;
+        if (!m_weight_labels.vlen || !m_weight_labels.vector) {
+		for (int32_t i=0; i<num_vectors; i++)
+			C[i] = m_C;
+	} else {
+		for (int32_t i=0; i<num_vectors; i++) {
+			int32_t label_idx = ((CMulticlassLabels*) m_labels)->get_int_label(i);
+			if (label_idx > 0) {
+				C[i] = m_C * m_weight_labels[label_idx-1];
+			} else {
+				C[i] = m_C;
+			}
+		}
+         }
 
 	Solver_MCSVM_CS solver(&mc_problem,num_classes,C,w0.matrix,m_epsilon,
 	                       m_max_iter,m_max_train_time,m_train_state);
@@ -146,4 +158,17 @@ bool CMulticlassLibLinear::train_machine(CFeatures* data)
 	SG_FREE(mc_problem.y);
 
 	return true;
+}
+
+void CMulticlassLibLinear::set_weight_labels(const SGVector<float64_t> weight_labels)
+{
+        m_weight_labels = weight_labels;
+}
+
+SGVector<float64_t> CMulticlassLibLinear::get_weight_labels()
+{
+        if (!m_weight_labels.vlen || !m_weight_labels.vector)
+                SG_ERROR("Please assign weight labels first!\n")
+
+        return m_weight_labels;
 }

@@ -139,6 +139,9 @@ class CMulticlassLibLinear : public CLinearMulticlassMachine
 		 */
 		SGVector<int32_t> get_support_vectors() const;
 
+		void set_weight_labels(const SGVector<float64_t> weight_labels);
+		SGVector<float64_t> get_weight_labels();
+
 protected:
 
 		/** train machine */
@@ -159,6 +162,9 @@ protected:
 
 		/** regularization constant for each machine */
 		float64_t m_C;
+
+		/** weight labels */
+		SGVector<float64_t> m_weight_labels;
 
 		/** tolerance */
 		float64_t m_epsilon;
