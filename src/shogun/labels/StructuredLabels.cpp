@@ -26,6 +26,12 @@ CStructuredLabels::CStructuredLabels(int32_t num_labels)
 CStructuredLabels::~CStructuredLabels()
 {
 	SG_UNREF(m_labels);
+	if (m_score) {
+        	delete[] m_score;
+	}
+	if (m_total_score) {
+		SG_FREE(m_total_score);
+	}
 }
 
 void CStructuredLabels::ensure_valid(const char* context)
@@ -84,6 +90,9 @@ void CStructuredLabels::init()
 
 	m_labels = NULL;
 	m_sdt = SDT_UNKNOWN;
+
+	m_score = NULL;
+	m_total_score = NULL;
 }
 
 void CStructuredLabels::ensure_valid_sdt(CStructuredData* label)
@@ -97,4 +106,30 @@ void CStructuredLabels::ensure_valid_sdt(CStructuredData* label)
 		REQUIRE(label->get_structured_data_type() == m_sdt, "All the labels must "
 				"belong to the same CStructuredData child class\n");
 	}
+}
+
+void CStructuredLabels::init_score(int32_t num_labels)
+{
+	m_score = new SGVector <float64_t>[num_labels];
+	m_total_score = SG_MALLOC(float64_t, num_labels);
+}
+
+void CStructuredLabels::set_score(int32_t j, SGVector <float64_t> score)
+{
+        m_score[j] = score;
+}
+
+SGVector<float64_t> CStructuredLabels::get_score(int32_t j)
+{
+        return m_score[j];
+}
+
+void CStructuredLabels::set_total_score(int32_t j, float64_t total_score)
+{
+        m_total_score[j] = total_score;
+}
+
+float64_t CStructuredLabels::get_total_score(int32_t j)
+{
+        return m_total_score[j];
 }

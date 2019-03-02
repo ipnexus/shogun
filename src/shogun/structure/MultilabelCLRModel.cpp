@@ -220,9 +220,14 @@ CResultSet * CMultilabelCLRModel::argmax(SGVector<float64_t> w, int32_t feat_idx
 	SGVector<float64_t> y_pred_dense(m_num_classes);
 	y_pred_dense.zero();
 
+	CResultSet * ret = new CResultSet();
+	SG_REF(ret);
+	ret->scores.resize_vector(m_num_classes);
+
 	for (index_t i = 0; i < m_num_classes; i++)
 	{
 		score = class_product[i] - plus_minus_one[i];
+	        ret->scores[i] = score;
 
 		if (score >= 0)
 		{
@@ -234,8 +239,6 @@ CResultSet * CMultilabelCLRModel::argmax(SGVector<float64_t> w, int32_t feat_idx
 	SGVector<int32_t> y_pred_sparse = to_sparse(y_pred_dense, 1, 0);
 	ASSERT(count == y_pred_sparse.vlen);
 
-	CResultSet * ret = new CResultSet();
-	SG_REF(ret);
 	ret->psi_computed = true;
 
 	CSparseMultilabel * y_pred = new CSparseMultilabel(y_pred_sparse);

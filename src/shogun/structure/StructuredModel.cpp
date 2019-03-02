@@ -18,8 +18,10 @@ CResultSet::CResultSet()
 	psi_truth_sparse(SGSparseVector<float64_t>(0)),
 	psi_pred_sparse(SGSparseVector<float64_t>(0)),
 	score(0),
+	scores(SGVector<float64_t>(0)),
 	delta(0)
 {
+
 }
 
 CResultSet::~CResultSet()

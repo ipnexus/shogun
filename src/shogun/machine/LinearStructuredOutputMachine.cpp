@@ -54,11 +54,15 @@ CStructuredLabels* CLinearStructuredOutputMachine::apply_structured(CFeatures* d
 	int num_input_vectors = model_features->get_num_vectors();
 	CStructuredLabels* out;
 	out = m_model->structured_labels_factory(num_input_vectors);
+	out->init_score(num_input_vectors);
+
 
 	for ( int32_t i = 0 ; i < num_input_vectors ; ++i )
 	{
 		CResultSet* result = m_model->argmax(m_w, i, false);
 		out->add_label(result->argmax);
+                out->set_total_score(i, result->score);
+                out->set_score(i, result->scores);
 
 		SG_UNREF(result);
 	}

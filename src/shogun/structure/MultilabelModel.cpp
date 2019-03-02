@@ -176,9 +176,14 @@ CResultSet * CMultilabelModel::argmax(SGVector<float64_t> w, int32_t feat_idx,
 	SGVector<float64_t> y_pred_dense(m_num_classes);
 	y_pred_dense.zero();
 
+	CResultSet * ret = new CResultSet();
+	SG_REF(ret);
+        ret->scores.resize_vector(m_num_classes);
+
 	for (int32_t c = 0; c < m_num_classes; c++)
 	{
 		score = dot_feats->dense_dot(feat_idx, w.vector + c * feats_dim, feats_dim);
+                ret->scores[c] = score;
 
 		if (score > 0)
 		{
@@ -190,8 +195,6 @@ CResultSet * CMultilabelModel::argmax(SGVector<float64_t> w, int32_t feat_idx,
 
 	SGVector<int32_t> y_pred_sparse = to_sparse(y_pred_dense, 1, 0);
 
-	CResultSet * ret = new CResultSet();
-	SG_REF(ret);
 	ret->psi_computed = true;
 
 	CSparseMultilabel * y_pred = new CSparseMultilabel(y_pred_sparse);

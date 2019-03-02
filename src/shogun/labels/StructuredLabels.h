@@ -106,6 +106,13 @@ class CStructuredLabels : public CLabels
 		 */
 		inline EStructuredDataType get_structured_data_type() { return m_sdt; }
 
+        	void init_score(int32_t num_labels);
+        	void set_score(int32_t j, SGVector <float64_t> score);
+        	SGVector<float64_t> get_score(int32_t j);
+
+        	void set_total_score(int32_t j, float64_t total_score);
+        	float64_t get_total_score(int32_t j);
+
 	private:
 		/** internal initialization */
 		void init();
@@ -119,6 +126,9 @@ class CStructuredLabels : public CLabels
 
 		/** the structured data type the labels are composed of */
 		EStructuredDataType m_sdt;
+
+		SGVector<float64_t>* m_score;
+		float64_t *m_total_score;
 
 }; /* class CStructuredLabels */
 

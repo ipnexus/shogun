@@ -81,9 +81,11 @@ struct CResultSet : public CSGObject
 	/** \f$ \Delta(y_{pred}, y_{truth}) + \langle w,
 	 *  \Psi(x_{truth}, y_{pred}) - \Psi(x_{truth}, y_{truth}) \rangle \f$ */
 	float64_t score;
+        SGVector< float64_t > scores;
 
 	/** delta loss for the prediction vs. truth */
 	float64_t delta;
+
 };
 
 /**
