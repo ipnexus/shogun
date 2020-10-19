@@ -7,8 +7,8 @@ ExternalProject_Add(
 	Eigen3
 	PREFIX ${CMAKE_BINARY_DIR}/Eigen3
 	DOWNLOAD_DIR ${THIRD_PARTY_DIR}/Eigen3
-	URL https://bitbucket.org/eigen/eigen/get/${EIGEN_VERSION}.tar.bz2
-	URL_MD5 9e3bfaaab3db18253cfd87ea697b3ab1
+	URL https://gitlab.com/libeigen/eigen/-/archive/${EIGEN_VERSION}/eigen-${EIGEN_VERSION}.tar.bz2
+#  URL_MD5 9e3bfaaab3db18253cfd87ea697b3ab1
 #	FIXME: http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1445
 #	URL https://bitbucket.org/eigen/eigen/get/3.3.4.tar.bz2
 #	URL_MD5 a7aab9f758249b86c93221ad417fbe18
